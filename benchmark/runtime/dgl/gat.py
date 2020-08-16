@@ -4,6 +4,7 @@ from torch.nn import Parameter
 from torch_geometric.nn.inits import glorot, zeros
 import dgl.function as fn
 #from dgl.nn.pytorch import EdgeSoftmax #0.2
+from dgl.nn.pytorch.softmax import EdgeSoftmax #https://docs.dgl.ai/en/0.4.x/_modules/dgl/nn/pytorch/softmax.html
 
 class GATConv(torch.nn.Module):
     def __init__(self,
@@ -89,7 +90,7 @@ class GATSPMVConv(torch.nn.Module):
         self.att_l = Parameter(torch.Tensor(heads, out_channels, 1))
         self.att_r = Parameter(torch.Tensor(heads, out_channels, 1))
         self.bias = Parameter(torch.Tensor(heads * out_channels))
-        #self.softmax = EdgeSoftmax() # 0.2
+        self.softmax = EdgeSoftmax()
         self.reset_parameters()
 
     def reset_parameters(self):
