@@ -3,8 +3,8 @@ import torch.nn.functional as F
 from torch.nn import Parameter
 from torch_geometric.nn.inits import glorot, zeros
 import dgl.function as fn
-#from dgl.nn.pytorch import EdgeSoftmax #0.2
-from dgl.nn.pytorch.softmax import EdgeSoftmax #https://docs.dgl.ai/en/0.4.x/_modules/dgl/nn/pytorch/softmax.html
+#from dgl.nn.pytorch import EdgeSoftmax #DGL 0.2
+import dgl.nn.pytorch.softmax #https://docs.dgl.ai/en/0.4.x/_modules/dgl/nn/pytorch/softmax.html
 
 class GATConv(torch.nn.Module):
     def __init__(self,
@@ -90,7 +90,7 @@ class GATSPMVConv(torch.nn.Module):
         self.att_l = Parameter(torch.Tensor(heads, out_channels, 1))
         self.att_r = Parameter(torch.Tensor(heads, out_channels, 1))
         self.bias = Parameter(torch.Tensor(heads * out_channels))
-        self.softmax = EdgeSoftmax()
+        #self.softmax = EdgeSoftmax() #DGL 0.2
         self.reset_parameters()
 
     def reset_parameters(self):
@@ -117,7 +117,8 @@ class GATSPMVConv(torch.nn.Module):
         return {'a': a}
 
     def edge_softmax(self):
-        alpha, normalizer = self.softmax(self.g.edata['a'], self.g)
+        #alpha, normalizer = self.softmax(self.g.edata['a'], self.g) #DGL 0.2
+        alpha, normalizer = edge_softmax(self.g, self.g.edata['a']) #graph, logits
         self.g.ndata['z'] = normalizer
         if self.training and self.dropout > 0:
             alpha = F.dropout(alpha, p=self.dropout, training=True)
