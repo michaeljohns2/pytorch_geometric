@@ -4,7 +4,7 @@ from torch.nn import Parameter
 from torch_geometric.nn.inits import glorot, zeros
 import dgl.function as fn
 #from dgl.nn.pytorch import EdgeSoftmax #DGL 0.2
-import dgl.nn.pytorch.softmax #https://docs.dgl.ai/en/0.4.x/_modules/dgl/nn/pytorch/softmax.html
+from dgl.nn.pytorch.softmax import * #https://docs.dgl.ai/en/0.4.x/_modules/dgl/nn/pytorch/softmax.html
 
 class GATConv(torch.nn.Module):
     def __init__(self,
